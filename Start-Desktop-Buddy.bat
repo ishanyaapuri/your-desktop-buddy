@@ -1,35 +1,15 @@
 @echo off
-setlocal enabledelayedexpansion
 title Starting Desktop Buddy...
 cd /d "%~dp0"
 
-:: 1. Check if Node.js is installed
-where node >nul 2>nul
-if %errorlevel% neq 0 (
-    echo.
+if not exist "node_modules\electron\" (
     echo ========================================================
-    echo  ERROR: Node.js is not installed on this computer!
-    echo ========================================================
-    echo.
-    echo Please download and install Node.js (LTS version) first:
-    echo https://nodejs.org/
-    echo.
-    pause
-    exit /b
-)
-
-:: 2. Auto-install dependencies if node_modules is missing!
-if not exist "node_modules\" (
-    echo.
-    echo ========================================================
-    echo  First-time setup detected! Installing components...
-    echo  This takes about 20 seconds. Please wait...
+    echo   First time setup: Installing components...
+    echo   (This takes about 20-30 seconds, please wait...)
     echo ========================================================
     echo.
     call npm install
 )
 
-:: 3. Launch cleanly
-echo Launching your Desktop Buddy...
-start "" /b cmd /c "npm start"
+start "" "%~dp0node_modules\electron\dist\electron.exe" "%~dp0."
 exit

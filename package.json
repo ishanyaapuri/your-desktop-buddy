@@ -1,0 +1,17 @@
+
+{
+  "name": "companion",
+  "version": "1.0.0",
+  "description": "Animated desktop AI pet",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "electron": "^45.0.0"
+  }
+}

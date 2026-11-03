@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Desktop Buddy Settings</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background: #faf6f0;
+      color: #2c2725;
+      padding: 22px;
+      font-size: 13.5px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #ebdcd0;
+    }
+
+    #header-avatar {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      filter: drop-shadow(0 3px 5px rgba(0,0,0,0.15));
+    }
+
+    .header-text h1 {
+      font-size: 17px;
+      font-weight: 800;
+      color: #3b2820;
+      letter-spacing: 0.3px;
+    }
+
+    .header-text p {
+      font-size: 12px;
+      color: #7d6b63;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1.5px solid #ebdcd0;
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(180, 140, 120, 0.06);
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #5b8096;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    /* Avatar Upload Row */
+    .avatar-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .avatar-preview-box {
+      width: 60px;
+      height: 60px;
+      background: #fdfbf7;
+      border: 2px dashed #d8c7bb;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .avatar-preview-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .avatar-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .btn-upload {
+      background: #5b8096;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-upload:hover {
+      background: #46677c;
+    }
+
+    .btn-reset-avatar {
+      background: transparent;
+      border: 1px solid #d8c7bb;
+      color: #7d6b63;
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-reset-avatar:hover {
+      background: #f7ede5;
+      color: #d96b52;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+    }
+
+    .row:not(:last-child) {
+      border-bottom: 1px solid #f6f0ea;
+    }
+
+    .row label {
+      font-weight: 600;
+      color: #423530;
+    }
+
+    select, input[type="time"] {
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: 1.5px solid #d8c7bb;
+      background: #fff;
+      font-size: 13px;
+      outline: none;
+      color: #2c2725;
+      font-weight: 500;
+    }
+
+    select:focus, input[type="time"]:focus {
+      border-color: #d96b52;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #d8cec5;
+      transition: .25s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .25s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    input:checked + .slider {
+      background-color: #d96b52;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    .time-inputs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #7d6b63;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    .btn-save {
+      background: #d96b52;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 22px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(217, 107, 82, 0.3);
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-save:hover {
+      background: #c4543b;
+    }
+
+    .btn-save:active {
+      transform: scale(0.96);
+    }
+
+    #save-status {
+      font-size: 12.5px;
+      color: #3b8a5a;
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #save-status.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <img id="header-avatar" src="./assets/pet/character.png" alt="Pet Avatar">
+    <div class="header-text">
+      <h1>Your Desktop Buddy</h1>
+      <p>Configure reminder intervals and appearance</p>
+    </div>
+  </div>
+
+  <!-- 🎨 CUSTOM CHARACTER AVATAR PICKER -->
+  <div class="card">
+    <div class="card-title">🎨 Character Avatar</div>
+    <div class="avatar-row">
+      <div class="avatar-preview-box">
+        <img id="avatar-preview" src="./assets/pet/character.png" alt="Preview">
+      </div>
+      <div class="avatar-buttons">
+        <button class="btn-upload" id="upload-btn">📁 Choose Custom Image (.png)</button>
+        <button class="btn-reset-avatar" id="reset-avatar-btn">↺ Reset to Default Character</button>
+        <div style="font-size: 11px; color: #7d6b63; margin-top: 4px; line-height: 1.35;">
+          ✨ <strong>Note:</strong> Please use a <strong>transparent background .PNG</strong> so your buddy blends seamlessly on your screen! (You can use free tools like <span style="color:#d96b52; font-weight:600;">remove.bg</span> to clear backgrounds).
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIVE MODE -->
+  <div class="card">
+    <div class="card-title">🎯 Active Mode</div>
+    <div class="row">
+      <div>
+        <label for="focus-mode">Study / Focus Mode</label>
+        <div style="font-size: 11.5px; color: #887870; font-weight: 400; margin-top: 2px;">
+          Swaps messages to productivity & anti-distraction reminders
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="focus-mode">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- TIMINGS -->
+  <div class="card">
+    <div class="card-title">⏱️ Reminder Timings</div>
+    <div class="row">
+      <label for="visit-interval">Visit Frequency</label>
+      <select id="visit-interval">
+        <option value="5">Every 5 minutes</option>
+        <option value="10">Every 10 minutes</option>
+        <option value="15">Every 15 minutes</option>
+        <option value="30">Every 30 minutes</option>
+        <option value="60">Every 1 hour</option>
+      </select>
+    </div>
+    <div class="row">
+      <label for="water-interval">Water Reminder</label>
+      <select id="water-interval">
+        <option value="15">Every 15 minutes</option>
+        <option value="20">Every 20 minutes</option>
+        <option value="30">Every 30 minutes</option>
+        <option value="45">Every 45 minutes</option>
+        <option value="60">Every 1 hour</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- APPEARANCE & BEHAVIOR -->
+  <div class="card">
+    <div class="card-title">📏 Appearance & Behavior</div>
+    <div class="row">
+      <label for="pet-size">Pet Size</label>
+      <select id="pet-size">
+        <option value="small">Small</option>
+        <option value="medium">Medium (Default)</option>
+        <option value="large">Large</option>
+      </select>
+    </div>
+    <div class="row">
+      <label for="always-on-top">Always on Top of Windows</label>
+      <label class="switch">
+        <input type="checkbox" id="always-on-top">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="row">
+      <label for="launch-startup">Launch when Windows Starts</label>
+      <label class="switch">
+        <input type="checkbox" id="launch-startup">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- QUIET HOURS -->
+  <div class="card">
+    <div class="card-title">🌙 Quiet Hours (Do Not Disturb)</div>
+    <div class="row">
+      <label for="quiet-enabled">Enable Quiet Hours</label>
+      <label class="switch">
+        <input type="checkbox" id="quiet-enabled">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="row" id="quiet-times-row">
+      <label>Quiet Window</label>
+      <div class="time-inputs">
+        <input type="time" id="quiet-start" value="22:00">
+        <span>to</span>
+        <input type="time" id="quiet-end" value="08:00">
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span id="save-status">✓ Settings saved successfully!</span>
+    <button class="btn-save" id="save-btn">Save Changes</button>
+  </div>
+
+  <script>
+    const headerAvatar = document.getElementById("header-avatar");
+    const avatarPreview = document.getElementById("avatar-preview");
+    const uploadBtn = document.getElementById("upload-btn");
+    const resetAvatarBtn = document.getElementById("reset-avatar-btn");
+
+    const focusMode = document.getElementById("focus-mode");
+    const visitInterval = document.getElementById("visit-interval");
+    const waterInterval = document.getElementById("water-interval");
+    const petSize = document.getElementById("pet-size");
+    const alwaysOnTop = document.getElementById("always-on-top");
+    const launchStartup = document.getElementById("launch-startup");
+    const quietEnabled = document.getElementById("quiet-enabled");
+    const quietStart = document.getElementById("quiet-start");
+    const quietEnd = document.getElementById("quiet-end");
+    const saveBtn = document.getElementById("save-btn");
+    const saveStatus = document.getElementById("save-status");
+
+    function updatePreviews(imgSrc) {
+      const src = imgSrc.startsWith("http") || imgSrc.startsWith("data:") ? imgSrc : "file:///" + imgSrc.replace(/\\/g, "/") + "?t=" + Date.now();
+      headerAvatar.src = src;
+      avatarPreview.src = src;
+    }
+
+    window.companion.getSettings().then(settings => {
+      if (settings.currentImagePath) {
+        updatePreviews(settings.currentImagePath);
+      }
+      focusMode.checked = Boolean(settings.focusMode);
+      if (settings.visitIntervalMinutes) visitInterval.value = String(settings.visitIntervalMinutes);
+      if (settings.waterIntervalMinutes) waterInterval.value = String(settings.waterIntervalMinutes);
+      if (settings.petSize) petSize.value = settings.petSize;
+      alwaysOnTop.checked = Boolean(settings.alwaysOnTop);
+      launchStartup.checked = Boolean(settings.launchAtStartup);
+      quietEnabled.checked = Boolean(settings.quietHoursEnabled);
+      if (settings.quietStart) quietStart.value = settings.quietStart;
+      if (settings.quietEnd) quietEnd.value = settings.quietEnd;
+    });
+
+    uploadBtn.addEventListener("click", async () => {
+      const newPath = await window.companion.selectCustomPet();
+      if (newPath) {
+        updatePreviews(newPath);
+      }
+    });
+
+    resetAvatarBtn.addEventListener("click", async () => {
+      const defaultPath = await window.companion.resetCustomPet();
+      if (defaultPath) {
+        updatePreviews(defaultPath);
+      }
+    });
+
+    saveBtn.addEventListener("click", () => {
+      const updated = {
+        focusMode: focusMode.checked,
+        visitIntervalMinutes: parseInt(visitInterval.value, 10),
+        waterIntervalMinutes: parseInt(waterInterval.value, 10),
+        petSize: petSize.value,
+        alwaysOnTop: alwaysOnTop.checked,
+        launchAtStartup: launchStartup.checked,
+        quietHoursEnabled: quietEnabled.checked,
+        quietStart: quietStart.value,
+        quietEnd: quietEnd.value
+      };
+
+      window.companion.saveSettings(updated);
+
+      saveStatus.classList.add("visible");
+      setTimeout(() => {
+        saveStatus.classList.remove("visible");
+      }, 2500);
+    });
+  </script>
+</body>
+</html>

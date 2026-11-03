@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pet Toggle</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+    }
+
+    /* Draggable Toggle Capsule */
+    #toggle-container {
+      width: 96px;
+      height: 38px;
+      background: #e2e8f0;
+      border-radius: 20px;
+      padding: 3px;
+      display: flex;
+      align-items: center;
+      position: relative;
+      cursor: grab;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      border: 2px solid #ffffff;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    #toggle-container:active {
+      cursor: grabbing;
+    }
+
+    /* Active State (ON) */
+    #toggle-container.active {
+      background: linear-gradient(135deg, #ff7fa7, #ff5e91);
+      border-color: #ffe3ec;
+    }
+
+    /* The Sliding Knob */
+    #toggle-knob {
+      width: 32px;
+      height: 32px;
+      background: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      left: 3px;
+      transition: left 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.15s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    }
+
+    #toggle-container.active #toggle-knob {
+      left: 57px;
+    }
+
+    #toggle-knob img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    /* Label inside toggle (ON / OFF) */
+    #toggle-label {
+      position: absolute;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .label-off {
+      right: 12px;
+      color: #718096;
+    }
+
+    .label-on {
+      left: 14px;
+      color: #ffffff;
+      display: none;
+    }
+
+    #toggle-container.active .label-off {
+      display: none;
+    }
+
+    #toggle-container.active .label-on {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="toggle-container" class="active" title="Click to toggle pet ON/OFF. Drag to move.">
+    <span id="toggle-label" class="label-on">ON</span>
+    <span id="toggle-label" class="label-off">OFF</span>
+    <div id="toggle-knob">
+      <img src="./assets/pet/character.png" alt="Pet">
+    </div>
+  </div>
+
+  <script>
+    const container = document.getElementById("toggle-container");
+    let isDragging = false;
+    let startScreenX = 0;
+    let startScreenY = 0;
+    let hasMoved = false;
+
+    // Load initial state
+    window.companion.getState().then(state => {
+      updateUI(state.enabled);
+    });
+
+    // Listen for state changes
+    window.companion.onStateUpdate(state => {
+      updateUI(state.enabled);
+    });
+
+    function updateUI(isEnabled) {
+      if (isEnabled) {
+        container.classList.add("active");
+      } else {
+        container.classList.remove("active");
+      }
+    }
+
+    // Drag & Click separation
+    container.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      hasMoved = false;
+      startScreenX = e.screenX;
+      startScreenY = e.screenY;
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+
+      const deltaX = e.screenX - startScreenX;
+      const deltaY = e.screenY - startScreenY;
+
+      if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
+        hasMoved = true;
+        window.companion.moveSummonWindow(deltaX, deltaY);
+        startScreenX = e.screenX;
+        startScreenY = e.screenY;
+      }
+    });
+
+    window.addEventListener("mouseup", () => {
+      if (!isDragging) return;
+      isDragging = false;
+
+      // If it wasn't dragged, it's a toggle click!
+      if (!hasMoved) {
+        window.companion.toggleActive();
+      }
+    });
+  </script>
+</body>
+</html>

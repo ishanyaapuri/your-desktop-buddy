@@ -25,7 +25,7 @@ Make sure you have **[Node.js](https://nodejs.org/)** (LTS version) installed on
 ### 2. Download & Run
 1. Click the green **`<> Code`** button above → **Download ZIP**.
 2. Extract the ZIP folder anywhere on your PC.
-3.Double click **Setup-And-Start.bat** to install all the required dependencies and launch your Desktop Buddy automatically. (You only need to do this once, during the initial setup.)
+3.Double click **Setup-And-Start.bat** to install all the required dependencies and launch your Desktop Buddy automatically. (You only need to do this once, during the initial setup.
 4. Once launched, click the **^** (Show Hidden Icons) arrow on your taskbar to access your Desktop Buddy. Explore the settings to customize it to your liking.
 5.For all future launches: Whenever you restart your laptop or your Buddy disappears from the system tray, simply double-click **Start-Desktop-Buddy.bat** to launch it again. No need to repeat the setup!
 ---

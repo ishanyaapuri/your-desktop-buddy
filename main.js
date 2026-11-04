@@ -361,8 +361,12 @@ function resetPetPosition() {
 let lastWaterTime = Date.now();
 
 function triggerVisit(force = false) {
+  // 📅 Checks the calendar date every visit so it updates even if laptop is left on overnight!
+  updateDailyStreak(); 
+
   const isSnoozed = snoozeUntil && snoozeUntil > Date.now();
   const inQuiet = isInQuietHours();
+  // ... rest stays identical
 
   if (!force && (!settings.enabled || isSnoozed || inQuiet)) return;
 
